@@ -1,0 +1,8 @@
+# Keep data files byte-identical across platforms so the published
+# SHA-256 checksums in README.md remain valid after checkout.
+*.csv    -text
+*.jsonl  -text
+*.pdf    binary
+*.ipynb  text eol=lf
+*.py     text eol=lf
+*.md     text eol=lf

@@ -1,0 +1,50 @@
+cff-version: 1.2.0
+message: "If you use, adapt, implement, or extend this framework, please cite it as below."
+type: software
+title: "PSI Field Lab: Synthetic Calibration and Prospective Field Validation Protocol"
+abstract: >-
+  A two-stage, data-centered methodology for documenting, synchronizing,
+  auditing, and reviewing multimodal field observations in anomalous and
+  paranormal research contexts. Stage I is a synthetic calibration
+  demonstration (fixed seed 333) that tests data integration, quality gates,
+  transparent scoring, unsupervised anomaly detection, participant-level site
+  repeatability, sensitivity analysis, constrained language-model review, and
+  run-level audit packaging. Stage II is a prospective real-data field protocol
+  (Muse 2 EEG, Polar RR intervals, body cameras, independent audio recorder,
+  environmental instruments) with matched target and control sessions,
+  blinding, preregistration, and repetition requirements. The framework is not
+  designed to prove or disprove paranormal causation.
+authors:
+  - family-names: Cardenas
+    given-names: Alberto
+    email: iam@albertocardenas.com
+    affiliation: "Paranormal 3:33 Research Lab"
+version: "1.0"
+date-released: "2026-09-25"
+license: CC-BY-NC-ND-4.0
+repository-code: "https://github.com/betoalien/Paranormal-333-PSI-Field-Lab"
+keywords:
+  - paranormal research
+  - parapsychology
+  - synthetic calibration
+  - field validation
+  - multimodal sensors
+  - Muse 2
+  - heart-rate variability
+  - anomaly triage
+  - preregistration
+  - repeatability
+  - language-model review
+  - research ethics
+preferred-citation:
+  type: report
+  title: "PSI Field Lab: Synthetic Calibration and Prospective Field Validation Protocol"
+  authors:
+    - family-names: Cardenas
+      given-names: Alberto
+  institution:
+    name: "Paranormal 3:33 Research Lab"
+  year: 2026
+  month: 9
+  version: "1.0"
+  license: CC-BY-NC-ND-4.0

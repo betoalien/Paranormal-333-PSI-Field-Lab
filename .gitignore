@@ -216,3 +216,30 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ------------------------------------------------------------
+# PSI Field Lab — project-specific rules
+# ------------------------------------------------------------
+
+# Secrets: the real environment file must NEVER be committed.
+# Share paranormal/.env.example instead.
+paranormal/.env
+**/.env
+!**/.env.example
+
+# Run outputs produced by the notebook (regenerated on every execution)
+psi_lab_v3_outputs/
+psi_lab_v3_downloads/
+output_*_UTC/
+psi_lab_v3_results_*.zip
+
+# Local regenerations of the synthetic dataset (default --out folder)
+paranormal_v2/
+
+# Jupyter / editor / OS noise
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
