@@ -225,46 +225,37 @@ To use a real language model, set `OLLAMA_BASE_URL`, `OLLAMA_MODEL`, and (for a 
 
 ### 5.5 (Level B) Run the analysis notebook
 
-#### Option 1: Deepnote (reference environment)
+The notebook finds its configuration file automatically, so it runs **unchanged on any machine**. It loads the first `.env` it finds in this order:
 
-The reference run was executed on Deepnote, which is what the notebook's default paths assume.
+1. the path in the `PSI_ENV_FILE` environment variable, if set;
+2. `./paranormal/.env`, when the working directory is the repository root;
+3. `../paranormal/.env`, when the notebook is opened from a subfolder;
+4. `/work/paranormal/.env`, the maintainers' internal Deepnote workspace.
 
-1. Create a Deepnote project and upload `PSI_Lab_v3_LLM.ipynb`.
-2. Upload the `paranormal/` folder so the files live at `/work/paranormal/` (including your `.env`).
-3. Run all cells top to bottom. The first code cell installs `ollama`, `python-dotenv`, `sqlalchemy`, and `psycopg2-binary`.
-4. The final ZIP package appears in `/work/psi_lab_v3_downloads/`.
+If none exists, it stops with a message listing every path it searched. When `PSI_DATA_DIR` is not set, the data folder defaults to the folder containing the `.env` (`paranormal/`).
 
-#### Option 2: Running locally (Jupyter)
-
-The notebook loads its environment file from a fixed Deepnote path. For a local run, make **one edit** in the first configuration cell (Section 1, "Import core libraries…"):
-
-```python
-# Original (Deepnote):
-ENV_PATH = Path("/work/paranormal/.env")
-# Local:
-ENV_PATH = Path("paranormal/.env")
-```
-
-and in `paranormal/.env` set local paths:
-
-```ini
-ENVIRONMENT=local
-PSI_DATA_DIR=./paranormal
-PSI_OUTPUT_DIR=./psi_lab_v3_outputs
-PSI_DOWNLOAD_DIR=./psi_lab_v3_downloads
-```
-
-Then:
+#### Option 1: Local machine (Jupyter), recommended
 
 ```bash
-jupyter lab PSI_Lab_v3_LLM.ipynb     # Run → Run All Cells
+cp paranormal/.env.example paranormal/.env   # if not done yet
+jupyter lab PSI_Lab_v3_LLM.ipynb             # Run → Run All Cells
 ```
 
-(The small path-check cell that prints whether `/work/paranormal` exists is Deepnote-specific and harmless locally.)
+The template's defaults (`PSI_DATA_DIR=./paranormal`, `PSI_OUTPUT_DIR=./psi_lab_v3_outputs`, `PSI_DOWNLOAD_DIR=./psi_lab_v3_downloads`) are relative to the repository root, and both output folders are git-ignored. On Windows, write absolute paths in `.env` with forward slashes (`C:/data/paranormal`), because backslashes are treated as escape characters.
 
-#### Option 3: Google Colab
+To keep the `.env` somewhere else, point to it before starting Jupyter:
 
-Upload the notebook and the `paranormal/` folder, set `ENV_PATH` to the uploaded `.env` location (for example `Path("/content/paranormal/.env")`), and set `PSI_DATA_DIR=/content/paranormal` in the `.env`.
+```bash
+export PSI_ENV_FILE=/path/to/my.env          # PowerShell: $env:PSI_ENV_FILE="C:/path/to/my.env"
+```
+
+#### Option 2: Google Colab
+
+Upload the notebook and the `paranormal/` folder to `/content/` (the default working directory), then run all cells; `./paranormal/.env` is found automatically. Alternatively set `os.environ["PSI_ENV_FILE"]` in a first cell.
+
+#### Option 3: Internal Deepnote workspace (maintainers only)
+
+The reference run was executed in the Paranormal 3:33 Research Lab Deepnote project, where the files live at `/work/paranormal/` and the private `.env` sets `PSI_DATA_DIR=/work/paranormal`, `PSI_OUTPUT_DIR=/tmp/psi_lab_v3_outputs`, and `PSI_DOWNLOAD_DIR=/work/psi_lab_v3_downloads`. External users do not need this layout.
 
 ### 5.6 LLM modes
 
@@ -288,10 +279,11 @@ All configuration is read from `paranormal/.env`. **No credential is ever hard-c
 
 | Variable | Default | Used for |
 |---|---|---|
-| `ENVIRONMENT` | `deepnote` | Label printed at start-up |
-| `PSI_DATA_DIR` | `/work/paranormal` | Folder with the five CSV files |
-| `PSI_OUTPUT_DIR` | `/tmp/psi_lab_v3_outputs` | Root of per-run output folders |
-| `PSI_DOWNLOAD_DIR` | `/work/psi_lab_v3_downloads` | Where the run ZIP is copied |
+| `PSI_ENV_FILE` | *(unset)* | Optional explicit path to the `.env` file (set as an OS environment variable, not inside `.env`) |
+| `ENVIRONMENT` | `local` | Label printed at start-up |
+| `PSI_DATA_DIR` | folder of the `.env` | Folder with the five CSV files |
+| `PSI_OUTPUT_DIR` | `psi_lab_v3_outputs` | Root of per-run output folders |
+| `PSI_DOWNLOAD_DIR` | `psi_lab_v3_downloads` | Where the run ZIP is copied |
 | `SEED` | `333` | Seed for Isolation Forest, bootstrap, review-set sampling, and weight sensitivity |
 | `PSI_LLM_MODE` | `auto` | `auto` / `live` / `mock` (see 5.6) |
 | `OLLAMA_BASE_URL` | none | Ollama-compatible endpoint |
@@ -401,7 +393,7 @@ Every synthetic feature family has a real counterpart that Stage II will collect
 The notebook (`PSI_Lab_v3_LLM.ipynb`) is organized in 15 sections. Every threshold below is a fixed, visible constant, so each one can be frozen and preregistered.
 
 ### §1–2 · Environment, data location, private LLM configuration
-Loads `.env`, resolves data and output directories, assigns a **UTC run ID** (`YYYYMMDD_HHMMSS_UTC`), and creates a dedicated output folder so one run never overwrites another. Tests the LLM connection with a controlled prompt.
+Locates and loads `.env` (see 5.5), resolves data and output directories, assigns a **UTC run ID** (`YYYYMMDD_HHMMSS_UTC`), and creates a dedicated output folder so one run never overwrites another. Tests the LLM connection with a controlled prompt.
 
 ### §3 · Load and verify the research tables
 Loads `sessions`, `sensor_windows`, `events`, `audio_reviews` (**not** `ground_truth`). Integrity checks run before anything is scored and stop the run on failure:
